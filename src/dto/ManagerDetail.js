@@ -1,5 +1,5 @@
 export default class ManagerDetail{
-    constructor(emailId, firstName, lastName, middleName, description, status, gender, profilePicture, dateOfBirth, profileCompleted ){
+    constructor(emailId, firstName, lastName, middleName, description, status, gender, profilePicture, dateOfBirth, countryId, profileCompleted, companyCreated ){
         this.emailId = emailId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -9,6 +9,8 @@ export default class ManagerDetail{
         this.gender = gender;
         this.profilePicture = profilePicture;
         this.dateOfBirth = dateOfBirth;
+        this.countryId = countryId;
         this.profileCompleted = profileCompleted;
+        this.companyCreated = companyCreated;
     }
 }

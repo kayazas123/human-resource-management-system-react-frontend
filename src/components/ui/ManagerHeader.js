@@ -140,11 +140,40 @@ export default function ManagerHeader(props) {
     const [drawerOpen, isDrawerOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [onManagerHome, isOnManagerHome] = useState(true);
+    const axios = require('axios');
+
+    const logOut = () => {
+        var data = JSON.stringify({ "accessToken": props.authentication, "refreshToken": props.refreshToken });
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:9090/v1/logout',
+            headers: {
+                'Authentication': 'BEARER ' + props.authentication,
+                'User-Id': props.userId,
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                props.clearCookies();
+                setTimeout(() => {
+                    window.location.pathname = '';
+                }, 500)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     useEffect(() => {
-        if (window.location.pathname === '/manager-dashboard')
+        if (window.location.pathname === '/manager-dashboard' || window.location.pathname === '/manager-dashboard/update-profile' || window.location.pathname === '/manager-dashboard/create-company')
+            isOnManagerHome(true);
+        else
             isOnManagerHome(false);
-    }, [])
+    })
 
     const handleModalOpen = () => {
         setOpen(true);
@@ -163,7 +192,7 @@ export default function ManagerHeader(props) {
         <>
             <div className={classes.buttonGroup}>
                 <IconButton aria-label="delete" >
-                    <Box visibility={onManagerHome && 'hidden'}>
+                    <Box display={onManagerHome && 'none'} component={Link} to='/manager-dashboard' onClick={() => { isOnManagerHome(true) }}>
                         <ArrowBackIcon className={classes.backButton} />
                     </Box>
                 </IconButton>
@@ -193,10 +222,10 @@ export default function ManagerHeader(props) {
                                 <Grid item>
                                     <Grid container direction='row' justify='center' alignItems='center'>
                                         <Grid item xs={6}>
-                                            <Button variant='contained' color='primary' size='large'>YES</Button>
+                                            <Button variant='contained' color='primary' size='large' onClick={logOut}>YES</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button variant='outlined' color='primary' size='large' onClick={()=>setOpen(false)}>CANCEL</Button>
+                                            <Button variant='outlined' color='primary' size='large' onClick={() => setOpen(false)}>CANCEL</Button>
                                         </Grid>
                                     </Grid>
                                 </Grid>

@@ -38,18 +38,16 @@ const useStyles = makeStyles(theme => ({
         fontSize: '1.6rem'
     },
     alert: {
-        fontSize:'1.5rem'
+        fontSize: '1.5rem'
     }
 }));
 
-export default function ContactUs() {
+export default function LoggedInContactUs(props) {
     const classes = useStyles();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
     const [issueType, setIssueType] = useState("");
     const axios = require('axios');
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [submitting, isSubmitting] = useState(false);
     const [open, setOpen] = useState(false);
@@ -57,14 +55,6 @@ export default function ContactUs() {
     const handleChange = (event) => {
         setIssueType(event.target.value);
     };
-
-    const handleFullNameChange = (event) => {
-        setFullName(event.target.value);
-    }
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    }
 
     const handleMessageChange = (event) => {
         setMessage(event.target.value);
@@ -84,7 +74,7 @@ export default function ContactUs() {
     };
 
     const checkValueValidity = () => {
-        if (fullName === '' || email === '' || message === '' || issueType === '')
+        if (message === '' || issueType === '')
             return false;
         return true
     }
@@ -92,7 +82,7 @@ export default function ContactUs() {
     const submitContactUsHandler = () => {
         if (checkValueValidity()) {
             isSubmitting(true);
-            var data = JSON.stringify({ "raisedByName": fullName, "raisedByEmail": email, "raisedByAccountType": "NOT REGISTERED", "description": message, "ticketIssue": issueType });
+            var data = JSON.stringify({ "raisedByName": props.managerDetails.firstName + ' ' + props.managerDetails.lastName, "raisedByEmail": props.managerDetails.emailId, "raisedByAccountType": "MANAGER", "description": message, "ticketIssue": issueType });
             var config = {
                 method: 'post',
                 url: 'http://localhost:9090/v1/support-ticket',
@@ -104,8 +94,6 @@ export default function ContactUs() {
 
             axios(config)
                 .then(function (response) {
-                    setFullName('');
-                    setEmail('');
                     setMessage('');
                     setIssueType('');
                     isSubmitting(false)
@@ -147,16 +135,6 @@ export default function ContactUs() {
                                 <MenuItem value={'OTHER'}>OTHER</MenuItem>
                             </Select>
                         </FormControl>
-                    </Grid>
-                    <Grid item>
-                        <Grid container direction='row' justify='center' alignItems='center' spacing={3}>
-                            <Grid item xs={6}>
-                                <TextField id="full-name" label="Enter Full Name" value={fullName} onChange={handleFullNameChange} />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField id="email" label="Enter Email" value={email} onChange={handleEmailChange} />
-                            </Grid>
-                        </Grid>
                     </Grid>
                     <Box my={4}>
                         <Grid item>

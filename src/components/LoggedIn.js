@@ -1,7 +1,9 @@
+import { ThemeProvider } from "@material-ui/styles";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import EmployeeDashboard from "./EmployeeDashboard";
 import ManagerDashboard from "./ManagerDashboard";
+import theme from "./ui/theme";
 
 export default function LoggedIn(props) {
     const authentication = props.authentication;
@@ -15,7 +17,7 @@ export default function LoggedIn(props) {
     useEffect(() => {
         if (refreshTokenTimer !== 'STOP') {
             setRefreshTokenTimer(setInterval(() => {
-                axios.get(`https://flenderson-spring-hrm.herokuapp.com/v1/refresh-token/${refreshToken}`).then(({ data }) => {
+                axios.get(`http://localhost:9090/v1/refresh-token/${refreshToken}`).then(({ data }) => {
                     setCookie("Authentication", data.access_token);
                 })
             }, 300000));
@@ -23,8 +25,8 @@ export default function LoggedIn(props) {
     }, [])
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             {accountType === 'MANAGER' ? <ManagerDashboard {...props} setRefreshTokenTimer={setRefreshTokenTimer} /> : <EmployeeDashboard  {...props} setRefreshTokenTimer={setRefreshTokenTimer} />}
-        </>
+        </ThemeProvider>
     );
 };

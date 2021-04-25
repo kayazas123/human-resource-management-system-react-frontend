@@ -1,8 +1,10 @@
-import { AppBar, Button, makeStyles, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useScrollTrigger, useTheme } from '@material-ui/core';
+import { AppBar, Backdrop, Box, Button, Fade, Grid, IconButton, makeStyles, Menu, MenuItem, Modal, Tab, Tabs, Toolbar, Typography, useMediaQuery, useScrollTrigger, useTheme } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from "../../assets/logo.svg";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 function ElevationScroll(props) {
@@ -58,7 +60,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '25px',
         marginRight: '25px',
         marginLeft: '20px',
-        fontSize: '1.2rem',
+        fontSize: '1.4rem',
         textTransform: 'none'
     },
     drawerIcon: {
@@ -85,6 +87,16 @@ const useStyles = makeStyles(theme => ({
         color: 'white',
         fontFamily: 'Shrikhand',
         fontSize: '2.2rem'
+    },
+    buttonGroup: {
+        marginLeft: 'auto'
+    },
+    backButton: {
+        color: 'white',
+        backgroundColor: 'black',
+        fontSize: '2.6rem',
+        padding: '0.6rem',
+        borderRadius: '50%'
     }
 }));
 
@@ -119,7 +131,6 @@ const StyledMenuItem = withStyles((theme) => ({
     },
 }))(MenuItem);
 
-
 export default function EmployeeHeader(props) {
     const classes = useStyles();
     const theme = useTheme();
@@ -127,13 +138,103 @@ export default function EmployeeHeader(props) {
     const [value, setValue] = useState(0);
     const [moreOptionsMenuValue, setMoreOptionsMenuValue] = useState(0);
     const [drawerOpen, isDrawerOpen] = useState(false);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [onEmployeeHome, isOnEmployeeHome] = useState(true);
+    const axios = require('axios');
+
+    const logOut = () => {
+        var data = JSON.stringify({ "accessToken": props.authentication, "refreshToken": props.refreshToken });
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:9090/v1/logout',
+            headers: {
+                'Authentication': 'BEARER ' + props.authentication,
+                'User-Id': props.userId,
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function (response) {
+                window.location.pathname = '';
+                props.clearCookies();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    useEffect(() => {
+        if (window.location.pathname === '/employee-dashboard' || window.location.pathname === '/employee-dashboard/update-profile' || window.location.pathname === '/employee-dashboard/not-approved' || window.location.pathname === '/employee-dashboard/join-company')
+            isOnEmployeeHome(true);
+        else
+            isOnEmployeeHome(false);
+    })
+
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setOpen(false);
+    };
 
 
     const logoClickHandler = () => {
         setValue(0);
     }
-    
+
+    const tabs = (
+        <>
+            <div className={classes.buttonGroup}>
+                <IconButton aria-label="delete" >
+                    <Box display={onEmployeeHome && 'none'} component={Link} to='/employee-dashboard' onClick={() => { isOnEmployeeHome(true) }}>
+                        <ArrowBackIcon className={classes.backButton} />
+                    </Box>
+                </IconButton>
+                <Button variant='contained' color='secondary' className={classes.button} type='button' onClick={handleModalOpen}>
+                    Log Out
+                </Button>
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={open}
+                    onClose={handleModalClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}
+                >
+                    <Fade in={open}>
+                        <div className={classes.paper}>
+                            <Grid container direction='column' justify='center' alignItems='center' spacing={3}>
+                                <Grid item>
+                                    <Typography variant='h4'>
+                                        Are You Sure You Want To Logout?
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Grid container direction='row' justify='center' alignItems='center'>
+                                        <Grid item xs={6}>
+                                            <Button variant='contained' color='primary' size='large' onClick={logOut}>YES</Button>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button variant='outlined' color='primary' size='large' onClick={() => setOpen(false)}>CANCEL</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </div>
+                    </Fade>
+                </Modal>
+            </div>
+        </>
+    );
+
     return (
         <>
             <ElevationScroll {...props}>
@@ -142,7 +243,7 @@ export default function EmployeeHeader(props) {
                         <Button component={Link} to="/" className={classes.logoContainer} onClick={logoClickHandler} disableRipple>
                             {!matches ? <img src={logo} alt='Flenderson Logo' /> : <Typography variant="h4" className={classes.textualLogo}>Flenderson</Typography>}
                         </Button>
-                        {!matches ? '' : 'drawer'}
+                        {!matches ? tabs : ''}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>

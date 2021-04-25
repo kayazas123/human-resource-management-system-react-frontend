@@ -24,7 +24,8 @@ function App() {
   }, []);
 
   const exchangeCodeForToken = () => {
-    axios.get(`https://flenderson-spring-hrm.herokuapp.com/v1/get-token/${code}`).then(({ data }) => {
+    console.log(code)
+    axios.get(`http://localhost:9090/v1/get-token/${code}`).then(({ data }) => {
       setCookie('Authentication', data.idToken);
       setCookie('RefreshToken', data.refreshToken);
       setCookie('UserId', data.userId);
@@ -33,9 +34,17 @@ function App() {
     })
   };
 
+  const clearCookies = () =>{
+    removeCookie('Authentication');
+    removeCookie('RefreshToken');
+    removeCookie('AccountType');
+    removeCookie('UserId');
+    isLoggedIn("FALSE");
+  }
+
   return (
     <CookiesProvider>
-      {loggedIn === 'FALSE' && code === '' ? <NotLoggedIn /> : loggedIn === 'FALSE' && code != '' ? [exchangeCodeForToken()] : <LoggedIn setCookie={setCookie} authentication={cookie.Authentication} refreshToken={cookie.RefreshToken} userId={cookie.UserId} accountType={cookie.AccountType} />}
+      {loggedIn === 'FALSE' && code === '' ? <NotLoggedIn /> : loggedIn === 'FALSE' && code != '' ? [exchangeCodeForToken()] : <LoggedIn clearCookies={clearCookies} setCookie={setCookie} authentication={cookie.Authentication} refreshToken={cookie.RefreshToken} userId={cookie.UserId} accountType={cookie.AccountType} />}
     </CookiesProvider>);
 }
 

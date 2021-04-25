@@ -17,10 +17,10 @@ export default function SignInButtonGroup() {
     const axios = require('axios');
 
     useEffect(()=>{
-        axios.get('https://flenderson-spring-hrm.herokuapp.com/v1/get-keycloak-url/manager').then(({data})=>{
+        axios.get('http://localhost:9090/v1/get-keycloak-url/manager').then(({data})=>{
             setManagerSignInLink(data);
         });
-        axios.get('https://flenderson-spring-hrm.herokuapp.com/v1/get-keycloak-url/employee').then(({data})=>{
+        axios.get('http://localhost:9090/v1/get-keycloak-url/employee').then(({data})=>{
             setEmployeeSignInLink(data);
         });
 

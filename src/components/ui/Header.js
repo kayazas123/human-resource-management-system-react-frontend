@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 
 import logo from "../../assets/logo.svg";
+import CodeIcon from '@material-ui/icons/Code';
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 
@@ -77,7 +78,7 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'none',
     '&:hover': {
       backgroundColor: "#CC313D",
-      color:'white'
+      color: 'white'
     }
   },
   drawerIcon: {
@@ -104,6 +105,10 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     fontFamily: 'Shrikhand',
     fontSize: '2.2rem'
+  },
+  apiButton: {
+    backgroundColor: 'blue',
+    fontSize: '1.4rem'
   }
 }));
 
@@ -247,6 +252,11 @@ export default function Header(props) {
                 <Grid container direction='column' justify='center' alignItems='center' spacing={4}>
                   <Grid item xs={12}>
                     <Typography variant='h4'>View Applications Code</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="contained" color="primary" size="large" className={classes.apiButton} startIcon={<CodeIcon />} type='button' href='https://flenderson-spring-hrm.herokuapp.com/swagger-ui.html' target='_blank'>
+                      VIEW API
+                  </Button>
                   </Grid>
                   <Grid item xs={12}>
                     <Button variant="contained" color="primary" size="large" className={classes.githubButtonBackend} startIcon={<GitHubIcon />} type='button' href='https://github.com/hardikSinghBehl/human-resource-management-system' target='_blank'>
