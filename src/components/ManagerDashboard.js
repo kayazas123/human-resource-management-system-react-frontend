@@ -15,7 +15,7 @@ import UpdateCompany from "./UpdateCompany";
 import companyIssues from "./CompanyIssues";
 import CompanyIssues from "./CompanyIssues";
 import CompanyEmployees from "./CompanyEmployees";
-import CompanyEvents from "./CompanyEvents";
+import CreateCompanyEvents from "./CreateCompanyEvent";
 
 export default function ManagerDashboard(props) {
   var axios = require('axios');
@@ -60,7 +60,7 @@ export default function ManagerDashboard(props) {
           <Route exact path='/manager-dashboard/update-profile' render={(renderProps) => <UpdateManagerProfile managerDetails={managerDetails} {...props} {...renderProps} />} />
           <Route exact path='/manager-dashboard/create-company' render={(renderProps) => <CreateCompany managerDetails={managerDetails} {...props} {...renderProps} />} />
           <Route exact path='/manager-dashboard/update-company-details' render={(renderProps) => <UpdateCompany {...renderProps} {...props} managerDetails={managerDetails} />} />
-          <Route exact path='/manager-dashboard/company-events' render={(renderProps) => <CompanyEvents {...renderProps} {...props} managerDetails={managerDetails} />}  />
+          <Route exact path='/manager-dashboard/company-events' render={(renderProps) => <CreateCompanyEvents {...renderProps} {...props} managerDetails={managerDetails} />}  />
           <Route exact path='/manager-dashboard/company-issues' render={(renderProps) => <CompanyIssues {...renderProps} {...props} managerDetails={managerDetails} />} />
           <Route exact path='/manager-dashboard/company-issue/:issueId' component={() => <h1>View Company Issue By Id</h1>} />
           <Route exact path='/manager-dashboard/company-employees' render={(renderProps) => <CompanyEmployees {...renderProps} {...props} managerDetails={managerDetails} />} />

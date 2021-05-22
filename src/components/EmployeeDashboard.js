@@ -9,6 +9,8 @@ import UpdateEmployeeProfile from "./UpdateEmployeeProfile";
 import NotApproved from "./NotApproved";
 import JoinCompany from "./JoinCompany";
 import EmployeeHomeScreen from "./EmployeeHomeScreen";
+import LoggedInContactUs from "./LoggedInContactUs";
+import CompanyEvents from "./CompanyEvents";
 
 export default function EmployeeDashboard(props) {
     var axios = require('axios');
@@ -44,14 +46,16 @@ export default function EmployeeDashboard(props) {
                             <Redirect to='/employee-dashboard/update-profile' />}
                         {(employeeDetails != null && (employeeDetails.profileCompleted && !employeeDetails.companyStatus === 1)) &&
                             <Redirect to='/employee-dashboard/join-company' />}
-                        {(employeeDetails != null && (employeeDetails.profileCompleted && employeeDetails.companyStatus === 1)) &&
+                        {(employeeDetails != null && (employeeDetails.profileCompleted && true)) &&
                             <Redirect to='/employee-dashboard' />}
-
                     </Route>
-                    <Route exact path='/employee-dashboard' render={()=><EmployeeHomeScreen {...props}/>}/>
+                    <Route exact path='/employee-dashboard' render={() => <EmployeeHomeScreen {...props} />} />
                     <Route exact path='/employee-dashboard/update-profile' render={(renderProps) => <UpdateEmployeeProfile employeeDetails={employeeDetails} {...props} {...renderProps} />} />
+                    <Route exact path='/employee-dashboard/contact-us' render={(renderProps) => <LoggedInContactUs {...renderProps} {...props} managerDetails={employeeDetails} />} />
+                    <Route exact path='/employee-dashboard/company-docs' render={(renderProps) => <LoggedInContactUs {...renderProps} {...props} managerDetails={employeeDetails} />} />
                     <Route exact path='/employee-dashboard/join-company' render={(renderProps) => <JoinCompany {...renderProps} employeeDetails={employeeDetails} {...props} />} />
                     <Route exact path='/employee-dashboard/not-approved' render={() => <NotApproved {...props} employeeDetails={employeeDetails} />} />
+                    <Route exact path='/employee-dashboard/company-events' render={(renderProps) => <CompanyEvents {...renderProps} {...props} employeeDetails={employeeDetails} />} />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>
